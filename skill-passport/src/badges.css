@@ -1,0 +1,38 @@
+.alt-learning-modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:17px 0 0}.alt-learning-modules .alt-module{background:#faf8f2;border:1px solid #eeeadf;border-radius:14px;overflow:visible;min-width:0}.alt-learning-modules .alt-module--complete{background:#f2f4eb;border-color:#e2e7d6}.alt-learning-modules .alt-module--review{background:#fcf0ed;border-color:#edd3cd}.alt-badge-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:100%;min-height:155px;padding:13px 5px 11px;background:none;border:0;border-radius:14px;cursor:pointer;color:#283d39;font-family:inherit}.alt-badge-button:hover{background:#ffffff50}.alt-badge-button:focus-visible{outline:3px solid #617f9d;outline-offset:3px}.alt-badge{position:relative;isolation:isolate;display:grid;place-items:center;width:77px;height:77px;background:#f8ead4;color:#8b713b;border-radius:24px 24px 30px 30px;box-shadow:inset 0 0 0 1px #dfcfad,0 4px 8px #283a2410;margin:0 0 6px}.alt-badge__colour{position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,#9eaf75 0%,#b9c99a 100%);clip-path:inset(calc(100% - var(--badge-fill)) 0 0 0);border-radius:inherit;transition:clip-path .35s ease}.alt-badge__rim{position:absolute;inset:5px;border:1px solid #ffffff80;border-radius:19px 19px 25px 25px}.alt-badge>svg{width:29px;height:29px;margin-top:-12px;stroke-width:1.6;color:#5f6d40}.alt-badge__count{position:absolute;bottom:13px;font:9px monospace;letter-spacing:1px;color:#50603c}.alt-badge__verified{position:absolute;right:-4px;bottom:4px;width:19px;height:19px;border:2px solid #f5f7ee;border-radius:50%;background:#526b3d;color:#fff;display:grid;place-items:center}.alt-badge__verified svg{width:10px;height:10px}.alt-module--review .alt-badge{background:#f5ccc3;box-shadow:inset 0 0 0 1px #dfb5ac}.alt-module--review .alt-badge__colour{background:#d79286}.alt-module--review .alt-badge>svg,.alt-module--review .alt-badge__count{color:#92594e}.alt-badge-button .alt-module__name{font-size:12px;line-height:1.3;text-align:center;white-space:normal}.alt-badge-button .alt-module__status{font-size:8px;max-width:none;text-align:center;line-height:1.4;display:block;color:#7b895b}.alt-module--pending .alt-module__status{color:#9a743c}.alt-module--review .alt-module__status{color:#a66456}.alt-badge__hint{font-size:8px;color:#89917c;line-height:1.3}.alt-task-dialog{width:calc(100% - 24px);max-width:408px;max-height:85dvh;padding:0;border:1px solid #dce1d1;border-radius:22px;background:#f8f7f0;color:#263b37;overflow:auto;box-shadow:0 25px 80px #142c3d55;overscroll-behavior:contain}.alt-task-dialog::backdrop{background:#142b37a6;backdrop-filter:blur(5px)}.alt-task-dialog__header{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:23px 20px 17px;background:#f8f7f0f5;backdrop-filter:blur(10px);border-bottom:1px solid #e5e8dc}.alt-task-dialog__header>div>span{font:9px monospace;letter-spacing:1px;color:#82916b}.alt-task-dialog__header h2{font:24px/1.2 Georgia,serif;margin:9px 0 7px;letter-spacing:-.5px}.alt-task-dialog__header p{margin:0;font-size:11px;color:#84936e}.alt-task-dialog .alt-module__content{padding:17px}.alt-task-dialog .alt-module__intro{font-size:12px}.alt-task-dialog .alt-task{padding:16px}.alt-task-dialog .alt-task h4{font-size:13px}.alt-task-dialog .alt-task>p{font-size:12px}.alt-task-dialog .alt-task__evidence{font-size:11px}.alt-task-dialog .alt-task__bottom>span{font-size:10px}.alt-task-dialog .alt-task button{min-height:44px;font-size:11px}.alt-task-dialog .alt-module__footnote{font-size:10px}.alt-task-dialog .alt-task__bottom{flex-wrap:wrap}@media(prefers-reduced-motion:reduce){.alt-badge__colour{transition:none}}
+
+/* A focused task card leaves the passport visible around it. */
+.alt-task-dialog.alt-task-dialog--compact{width:calc(100% - 64px);max-width:326px;max-height:68dvh;border-radius:20px;box-shadow:0 14px 45px #1e322d35}
+.alt-task-dialog--compact::backdrop{background:#142b373d;backdrop-filter:blur(1px)}
+.alt-task-dialog--compact .alt-task-dialog__header{position:static;padding:18px 17px 14px;background:#f8f7f0}
+.alt-task-dialog--compact .alt-task-dialog__header>div>span{font-size:8px}
+.alt-task-dialog--compact .alt-task-dialog__header h2{font-size:23px!important;line-height:1.15;margin:8px 0 0}
+.alt-task-dialog--compact .app-icon-button{width:29px;height:29px;font-size:20px}
+.alt-task-dialog--compact .alt-module__content{padding:14px}
+.alt-task-dialog--compact .alt-module__intro{font-size:11px;line-height:1.5;padding:0 2px 12px}
+.alt-task-overview{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:0 2px 15px;font-size:8px;color:#889774;letter-spacing:.4px}
+.alt-task-overview strong{font-size:9px;font-weight:500;letter-spacing:0;color:#66774f}
+.alt-task-overview>div{display:flex;gap:5px;flex-basis:100%}
+.alt-task-segment{height:4px;flex:1;border-radius:3px;background:#ead8b9}
+.alt-task-segment--complete{background:#91a16e}.alt-task-segment--review{background:#d99d91}
+.alt-task-dialog--compact .alt-task{padding:13px;border-radius:10px}
+.alt-task-dialog--compact .alt-task .alt-task-current-label{margin:0 0 10px!important;font-size:8px;letter-spacing:1px;color:#9b7842}
+.alt-task-dialog--compact .alt-task__number{display:none}
+.alt-task-dialog--compact .alt-task__heading h4{font-size:12px}
+.alt-task-dialog--compact .alt-task>p{font-size:11px;line-height:1.65;margin:10px 0!important}
+.alt-task-dialog--compact .alt-task__evidence{font-size:10px;padding:4px 0 10px;line-height:1.5}
+.alt-task-dialog--compact .alt-task__bottom{margin-top:10px}
+.alt-task-dialog--compact .alt-task__bottom>span{font-size:9px}
+.alt-task-dialog--compact .alt-task button{font-size:10px;min-height:40px;padding:9px 10px}
+.alt-task-dialog--compact .alt-module__footnote{font-size:9px;text-align:center;padding-top:12px}
+.alt-task-finished{text-align:center;padding:12px 3px;color:#6c7d52}
+.alt-task-finished>svg{width:27px;height:27px;padding:4px;border-radius:50%;background:#e1e8d3}
+.alt-task-finished h3{font-size:16px;margin:12px 0 7px}
+.alt-task-finished p{font-size:11px;line-height:1.7}
+.alt-task-finished button{margin-top:14px;font-size:11px}
+@media(max-height:650px){.alt-task-dialog.alt-task-dialog--compact{max-height:72dvh}}
+
+/* One opaque surface; retain the readable passport behind a light, unblurred veil. */
+.alt-task-dialog.alt-task-dialog--compact{background:#f8f7f0}
+.alt-task-dialog--compact::backdrop{background:rgba(23,44,56,.12);backdrop-filter:none}
+.alt-task-dialog--compact .alt-task-dialog__header,.alt-task-dialog--compact .alt-module__content,.alt-task-dialog--compact .alt-task,.alt-task-dialog--compact .alt-task--review,.alt-task-dialog--compact .alt-task--complete{background:#f8f7f0;backdrop-filter:none}
+.alt-task-dialog--compact .alt-task{border-color:#dce1d1}
