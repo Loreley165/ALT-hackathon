@@ -200,6 +200,7 @@ function selectNav(destination) {
   stopVoice();
   $('.app-shell').classList.toggle('passport-active', destination === 'passport');
   $('.app-shell').classList.remove('mission-active');
+  $('.app-shell').classList.toggle('profile-active', destination === 'profile');
   document.querySelectorAll('[data-nav]').forEach(button => {
     if (button.dataset.nav === destination) button.setAttribute('aria-current', 'page');
     else button.removeAttribute('aria-current');
@@ -218,7 +219,8 @@ document.querySelectorAll('[data-nav]').forEach(button => button.addEventListene
   }
   if (button.dataset.nav === 'profile') {
     selectNav('profile');
-    $('#profile-title').focus({ preventScroll: true });
+    window.ALTProfile.show($('#profile-root'), { onPassport: showPassport, analysed: passportAnalysed });
+    $('#profile-screen').focus({ preventScroll: true });
   }
 }));
 
@@ -253,3 +255,5 @@ refreshSavedMission();
 
 // Direct preview link for the mission decision screen.
 if (new URLSearchParams(window.location.search).get("screen") === "mission") showMissions();
+
+if (new URLSearchParams(window.location.search).get("screen") === "profile") document.querySelector('[data-nav="profile"]').click();

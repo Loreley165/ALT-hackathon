@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import ALTNextShiftMission, { mockMission } from './ALTNextShiftMission.jsx';
 import PassportScreen from './PassportScreen.jsx';
+import ProfileScreen from './ProfileScreen.jsx';
 let missionRoot, passportRoot;
 window.ALTMissions = {
   show(container, onBack) {
@@ -27,3 +28,13 @@ window.ALTPassport = {
     passportRoot.render(<PassportScreen key={String(props.analysed)} {...props}/>);
   }
 };
+
+let profileRoot;
+window.ALTProfile = { show(container, props) {
+  if (!profileRoot) {
+    const shadow = container.attachShadow({ mode: 'open' });
+    const style = document.createElement('link'); style.rel = 'stylesheet'; style.href = new URL('result-ui.css?v=profile-passport-3', document.baseURI).href;
+    const mount = document.createElement('div'); shadow.append(style, mount); profileRoot = createRoot(mount);
+  }
+  profileRoot.render(<ProfileScreen {...props}/>);
+}};
