@@ -1,19 +1,153 @@
-# ALT employee MVP
+# ALT — Turn Every Shift Into Progress
 
-A dependency-free, responsive phone mockup with a navy header, gold details and warm white content matching the supplied Skill Passport reference for Alex Chen, Shift 4, targeting POS Independent.
+ALT is a hospitality onboarding and skill progression prototype designed to help frontline employees learn through real work.
 
-Run `python3 -m http.server 5173 --bind 127.0.0.1` from this folder and open http://127.0.0.1:5173.
+Instead of relying only on training modules or completion checklists, ALT captures what employees actually do during a shift, turns those experiences into skill evidence, identifies development areas, and uses that information to guide what they should practise next.
 
-- `index.html`: employee home and integration point for future components.
-- `styles.css`: light content area, dark upper section, and a rounded phone frame with an internally scrolling screen.
-- `app.js`: input modes, validation and local demo analysis. Replace `analyseShift` with the real analysis service later.
+## The Problem
 
-The first screen defaults to a large microphone. “Can’t talk right now? Type instead” opens a native modal dialog with text input and selectable answers. Closing the dialog preserves input. A preview allows review before the small pill-shaped “Update My Skill Passport” button. Opening text input stops recording. “Didn’t use the POS” is exclusive with other picks.
+Hospitality employees can complete onboarding and training without managers knowing whether they are actually ready to perform tasks independently.
 
-Voice uses browser SpeechRecognition where available, requests microphone access only on record, and allows transcript editing. Recognition may use the browser vendor's remote speech service. English (Australia) is the recognition language. Unsupported browsers and microphone/network errors show a fallback message. Use localhost or HTTPS for microphone access.
+At the same time, supervisors often have limited time to continuously observe, document and assess every new employee.
 
-No backend or persistence. Content clears on reload. Analysis remains a labelled local demo and does not assess skills. Skill Passport and Next Mission are out of scope.
+This creates a gap between:
 
-Validation: JavaScript interaction checks passed for blank input, multi-select/exclusivity, combined text, mocked voice transcript/stop/errors, stale callbacks and unsupported browsers. Actual microphone recognition and visual inspection could not be tested because browser automation's security-policy verification was unavailable.
+**training completed**  
+and  
+**work readiness demonstrated**
 
-Mockup: CSS iPhone 17 front view, using Apple’s published 71.5 × 149.6 mm body proportions (https://www.apple.com/iphone-17/specs/). Includes simulated hardware keys, Dynamic Island, fixed status bar and home indicator. This is an interactive web mockup, not an official Apple device render.
+## Our Idea
+
+ALT turns everyday work into an ongoing learning loop:
+
+**Reflect → Evidence → Progress → Next Mission**
+
+At the end of a shift, employees quickly record what they did using voice, quick selections or text.
+
+ALT then:
+
+- identifies evidence of skills demonstrated during the shift
+- highlights areas where support was still needed
+- updates the employee's Skill Passport
+- identifies skills that may be ready for supervisor verification
+- generates a personalised focus for the next shift
+
+The aim is to make workplace learning visible without creating another long training process.
+
+## Prototype Flow
+
+Our current prototype follows one employee, Alex, who is developing the skill **POS Independent**.
+
+### 1. Finish the Shift
+
+Alex records what happened during the shift using:
+
+- voice input
+- quick-select prompts
+- written reflection
+
+Example:
+
+> "I completed three POS orders independently, including one with a modifier, but I still needed help with a nut allergy enquiry."
+
+### 2. Turn Experience Into Evidence
+
+ALT analyses the reflection and identifies observable workplace evidence, such as:
+
+- independent POS orders completed
+- modified orders handled
+- situations where supervisor support was required
+
+### 3. Update the Skill Passport
+
+The evidence contributes to Alex's skill progression.
+
+For example:
+
+**POS Independent**  
+`Practising → Ready for Verification`
+
+ALT does not automatically verify an employee's competence. Important skills remain subject to supervisor confirmation.
+
+### 4. Generate the Next Mission
+
+ALT uses today's evidence to create a practical goal for the next shift.
+
+For example:
+
+**Next Shift Mission**
+
+- Handle one dietary enquiry with supervisor support
+- Complete one modified POS order independently
+- Request POS skill verification
+
+This creates a continuous cycle in which each shift informs the next.
+
+## Why ALT Is Different
+
+Traditional training systems often focus on whether an employee has:
+
+- watched a training module
+- completed onboarding
+- passed a quiz
+
+ALT focuses on a different question:
+
+**What has this employee actually demonstrated at work?**
+
+The workplace itself becomes part of the learning process.
+
+## Core Design Principles
+
+### Real-work based
+
+Skill development is linked to experiences that happen during actual shifts.
+
+### Low effort
+
+Employees can reflect quickly through voice, simple selections or text.
+
+### Evidence before verification
+
+AI can identify and organise evidence, but it does not make the final decision about competence.
+
+### Adaptive progression
+
+What happens today influences what the employee is encouraged to practise tomorrow.
+
+### Employee-led, supervisor-verified
+
+Employees can demonstrate progress while supervisors retain responsibility for formal skill verification.
+
+## Future Development
+
+Possible future features include:
+
+- supervisor verification workflows
+- multi-shift evidence history
+- personalised skill pathways
+- role-specific hospitality skill frameworks
+- team readiness dashboards
+- manager observations as an additional evidence source
+- adaptive onboarding plans
+- integration with workplace training systems
+
+## Hackathon Prototype
+
+This prototype was developed as part of the eChallenge Hackathon.
+
+The focus of the build was to demonstrate one core concept:
+
+> **Every shift leaves evidence. Every piece of evidence can move an employee forward.**
+
+The prototype prioritises the user experience and product concept rather than a production-ready backend.
+
+## Demo
+
+Live prototype:
+
+https://alt-coral.vercel.app/
+
+---
+
+**ALT — Align. Learn. Thrive.**

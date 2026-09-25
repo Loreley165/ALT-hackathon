@@ -123,6 +123,7 @@ setInterval(updateClock, 10000);
 
 // Staged demo only. Replace with real analysis progress when the API is connected.
 let transitionTimers = [];
+let passportAnalysed = false;
 function startAnalysis() {
   transitionTimers.forEach(clearTimeout);
   ['evidence-step', 'insights-step', 'continue-step'].forEach(id => $('#' + id).hidden = true);
@@ -132,6 +133,7 @@ function startAnalysis() {
   $('#transition-status').textContent = 'Finding the learning in your everyday work.';
   $('#reflection-form').hidden = true;
   document.querySelectorAll('.reflection > .section-top, .reflection > h2, .reflection > .description').forEach(el => el.hidden = true);
+  $('#result-screen').hidden = true;
   analysis.hidden = false;
   analysis.classList.remove('complete');
   $('#analysis-title').focus({ preventScroll: true });
@@ -148,6 +150,8 @@ function startAnalysis() {
       $('#analysis-title').textContent = 'Your learning, made visible.';
       $('#transition-status').textContent = 'A moment from your shift. A clearer picture of your growth.';
       analysis.classList.add('complete');
+      passportAnalysed = true;
+      showPassport();
     }, 2700)
   ];
 }
@@ -158,11 +162,26 @@ $('#back-reflection').addEventListener('click', () => {
   document.querySelectorAll('.reflection > .section-top, .reflection > h2, .reflection > .description').forEach(el => el.hidden = false);
   $('#analyse').focus();
 });
-$('#update-passport').addEventListener('click', () => {
-  $('#passport-status').textContent = 'Demo complete. The Skill Passport screen is not connected yet; no record has been changed.';
-  $('#passport-status').hidden = false;
-  $('#update-passport').disabled = true;
-});
+function returnToReflection() {
+  selectNav('today');
+  $('#result-screen').hidden = true;
+  analysis.hidden = true;
+  $('#reflection-form').hidden = false;
+  document.querySelectorAll('.reflection > .section-top, .reflection > h2, .reflection > .description').forEach(el => el.hidden = false);
+  $('#analyse').focus();
+}
+function showMissions() {
+  selectNav('today');
+  $('.app-shell').classList.add('mission-active');
+  $('#reflection-form').hidden = true;
+  document.querySelectorAll('.reflection > .section-top, .reflection > h2, .reflection > .description').forEach(el => el.hidden = true);
+  analysis.hidden = true;
+  $('#result-screen').hidden = false;
+  window.ALTMissions.show($('#result-root'), recordAgain);
+  $('#result-screen').focus({ preventScroll: true });
+  $('.app-shell').scrollTo({ top: 0, behavior: 'instant' });
+}
+$('#update-passport').addEventListener('click', showMissions);
 
 // Prepared example matches the illustrative evidence in the demo transition.
 $('#try-demo').addEventListener('click', () => {
@@ -174,3 +193,63 @@ $('#try-demo').addEventListener('click', () => {
   $('#demo-status').hidden = false;
   $('#reflection-preview').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
 });
+
+// Navigation stays outside the screen's scrollable content.
+function selectNav(destination) {
+  transitionTimers.forEach(clearTimeout);
+  stopVoice();
+  $('.app-shell').classList.toggle('passport-active', destination === 'passport');
+  $('.app-shell').classList.remove('mission-active');
+  document.querySelectorAll('[data-nav]').forEach(button => {
+    if (button.dataset.nav === destination) button.setAttribute('aria-current', 'page');
+    else button.removeAttribute('aria-current');
+  });
+  $('.reflection').hidden = destination !== 'today';
+  $('#passport-placeholder').hidden = destination !== 'passport';
+  $('.compact-target').hidden = destination !== 'today';
+  $('#profile-screen').hidden = destination !== 'profile';
+  $('.app-shell').scrollTo({ top: 0, behavior: 'instant' });
+}
+document.querySelectorAll('[data-nav]').forEach(button => button.addEventListener('click', () => {
+  if (dialog.open) dialog.close();
+  if (button.dataset.nav === 'today') returnToReflection();
+  if (button.dataset.nav === 'passport') {
+    showPassport();
+  }
+  if (button.dataset.nav === 'profile') {
+    selectNav('profile');
+    $('#profile-title').focus({ preventScroll: true });
+  }
+}));
+
+// Integration point: the teammate-owned Passport should call showMissions after its own analysis.
+window.ALTFlow = { showMissions };
+
+function showPassport() {
+  selectNav('passport');
+  analysis.hidden = true;
+  window.ALTPassport.show($('#passport-root'), {
+    analysed: passportAnalysed,
+    reflection: reflectionText(),
+    onMission: showMissions
+  });
+  $('#passport-placeholder').focus({ preventScroll: true });
+}
+
+function recordAgain() {
+  reflection.value = '';
+  choices.forEach(button => button.setAttribute('aria-pressed', 'false'));
+  changed();
+  passportAnalysed = false;
+  returnToReflection();
+}
+function refreshSavedMission() {
+  try { $('#saved-mission').hidden = !JSON.parse(localStorage.getItem('alt-next-shift-mission-v1'))?.missions?.length; }
+  catch { $('#saved-mission').hidden = true; }
+}
+$('#saved-mission').addEventListener('click', showMissions);
+window.addEventListener('alt-mission-saved', refreshSavedMission);
+refreshSavedMission();
+
+// Direct preview link for the mission decision screen.
+if (new URLSearchParams(window.location.search).get("screen") === "mission") showMissions();
