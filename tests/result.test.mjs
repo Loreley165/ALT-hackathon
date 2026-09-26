@@ -57,6 +57,12 @@ test('Try demo → transition → Alison Passport → Mission → back and navig
   assert.ok(passport.textContent.includes('Alex Chen'));
   assert.ok(passport.textContent.includes('Ready for Verification'));
   assert.ok(passport.textContent.includes(reflection));
+  assert.equal(passport.querySelector('.pp-radar'), null);
+  assert.equal(passport.querySelector('.pp-id-card'), null);
+  assert.ok(passport.textContent.includes('+10 pts'));
+  assert.ok(passport.textContent.includes('+4 pts'));
+  assert.ok(passport.querySelector('.passport-handoff').compareDocumentPosition(passport.querySelector('.pp-growth')) & 4);
+  assert.ok(passport.querySelector('.pp-growth').compareDocumentPosition(passport.querySelector('.pp-share-trigger')) & 4);
   passport.querySelector('.passport-handoff button').click();
   await new Promise(resolve => setTimeout(resolve, 40));
   assert.equal($('#result-screen').hidden, false);

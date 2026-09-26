@@ -2,17 +2,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { initialSkills } from '../skill-passport/src/SkillPassport.jsx';
 import SkillModule from '../skill-passport/src/SkillModule.jsx';
 import { seedRecords, completeTask } from '../skill-passport/src/learning.js';
-import { demoAxes, radarPoints, passportSVG, passportPNG, downloadBlob } from './passport-art.js';
+import { demoAxes, passportSVG, passportPNG, downloadBlob } from './passport-art.js';
 import './passport-bridge.css';
 
 function Brand() { return <svg className="pp-logo" viewBox="0 0 112 54" role="img" aria-label="ALT"><text x="4" y="40" fill="currentColor" fontFamily="Georgia,serif" fontSize="47">ALT</text><path d="M3 43 Q29 23 51 37" fill="none" stroke="#d3b980" strokeWidth="3"/></svg>; }
-function Radar({ axes }) {
-  return <svg className="pp-radar" viewBox="0 0 320 265" role="img" aria-label={`Demo capability scores out of 100: ${axes.map(a=>`${a.label} ${a.score}`).join(', ')}`}>
-    {[25,50,75,100].map(score=><polygon key={score} points={radarPoints(axes.map(a=>({...a,score})))} fill="none" stroke="#dce2d5"/>)}
-    {axes.map((a,i)=>{const angle=(-90+i*60)*Math.PI/180;return <line key={a.label} x1="160" y1="132" x2={160+Math.cos(angle)*87} y2={132+Math.sin(angle)*87} stroke="#e0e4d9"/>;})}
-    <polygon points={radarPoints(axes)} fill="#8a9e6e40" stroke="#7b9162" strokeWidth="2"/>
-    {axes.map((a,i)=>{const angle=(-90+i*60)*Math.PI/180,x=160+Math.cos(angle)*119,y=132+Math.sin(angle)*111;return <g key={a.label}><text x={x} y={y} textAnchor="middle" fill="#65766e" fontSize="9">{a.label}</text><text x={x} y={y+14} textAnchor="middle" fill="#294635" fontSize="11" fontWeight="600">{a.score}</text></g>;})}
-  </svg>;
+const shiftProgress = [
+  { label: 'POS operation', before: 62, after: 72, evidence: '3 orders completed independently · 1 modified order handled' },
+  { label: 'Communication', before: 72, after: 76, evidence: 'Asked for supervisor support when it mattered' },
+  { label: 'Allergen handling', before: 38, after: 38, evidence: 'Keep practising with supervisor support' },
+];
+function ShiftProgress({ analysed }) {
+  return <section className="pp-growth" aria-labelledby="growth-title">
+    <div className="pp-section-heading"><h3 id="growth-title">Your progress this shift</h3><span>DEMO</span></div>
+    <p className="pp-muted">{analysed ? 'Small steps. Real reasons to keep going.' : 'Reflect on your shift to see your progress here.'}</p>
+    {analysed && <ul>{shiftProgress.map(skill=><li key={skill.label}>
+      <div className="pp-growth-title"><strong>{skill.label}</strong><span className={skill.after > skill.before ? 'pp-gain' : 'pp-practice'}>{skill.after > skill.before ? `+${skill.after-skill.before} pts` : 'Keep practising'}</span></div>
+      <p>{skill.evidence}</p><div className="pp-growth-score"><span>{skill.before} → <b>{skill.after}</b> / 100</span></div>
+      <div className="pp-growth-track" aria-hidden="true"><i style={{width:`${skill.after}%`}}/><i style={{width:`${skill.before}%`}}/></div>
+    </li>)}</ul>}
+    <p className="pp-growth-note">Illustrative demo changes, not an AI assessment.</p>
+  </section>;
 }
 function SharePassport({ axes, analysed, onClose }) {
   const dialog=useRef(null); const [busy,setBusy]=useState(false),[message,setMessage]=useState('');
@@ -41,11 +50,11 @@ export default function PassportScreen({ analysed, reflection, onMission }) {
     <header className="pp-header"><Brand/><span>MY LEARNING</span><div className="pp-avatar">AC</div></header>
     <div className="pp-content">
       <div className="pp-title"><p>YOUR GROWTH, MADE VISIBLE</p><h2>Skill Passport<span>.</span></h2><div>A little better, every shift.</div></div>
-      <div className="pp-id-card"><div className="pp-id-top"><span className="pp-id-avatar">AC</span><div><strong>Alex Chen</strong><p>Hospitality team member</p></div><span className="pp-id-star">✧</span></div><div className="pp-id-bottom"><span>SHIFT <b>04</b></span><span>DEMO ID <b>ALT–0042</b></span><span>SKILLS <b>2 / 4 verified*</b></span></div></div>
-      <button className="pp-share-trigger" onClick={()=>setSharing(true)}><span>▣</span> View & share my passport <span>↗</span></button>
-      <section className="pp-capability"><div className="pp-section-heading"><h3>Your capability snapshot</h3><span>DEMO</span></div><Radar axes={axes}/><div className="pp-chart-note"><span></span>Illustrative scores / 100 · not an assessment</div></section>
+      <div className="pp-identity-line"><span className="pp-light-avatar">AC</span><div><strong>Alex Chen</strong><p>Shift 4 · Hospitality team member</p></div></div>
       <section className="pp-skills"><div className="pp-section-heading"><h3>Your skills</h3><span>4 AREAS</span></div><p className="pp-muted">Tap a skill to explore your learning steps.</p><ul className="alt-learning-modules">{skills.map((skill,index)=><SkillModule key={skill.id} skill={skill} index={index} records={records} onCompleteTask={(id,task)=>setRecords(value=>completeTask(value,id,task))} now={new Date()}/>)}</ul></section>
       <div className="passport-handoff">{reflection && <details><summary>Your shift reflection</summary><p>{reflection}</p></details>}<button onClick={onMission}>See My Next Shift Mission →</button></div>
+      <ShiftProgress analysed={analysed}/>
+      <button className="pp-share-trigger" onClick={()=>setSharing(true)}><span>▣</span> View & share my passport <span>↗</span></button>
       <p className="pp-disclaimer">* Mock skill record. Scores and verified labels are examples only; no real assessment or certification.</p>
     </div>
     {sharing && <SharePassport axes={axes} analysed={analysed} onClose={()=>setSharing(false)}/>}
