@@ -36,7 +36,7 @@ The aim is to make workplace learning visible without creating another long trai
 
 ## Prototype Flow
 
-Our current prototype follows one employee, Alex, who is developing the skill **POS Independent**.
+The interactive prototype follows Alex as they develop **POS Independent**, then connects a shift reflection to employee and supervisor views of the Skill Passport.
 
 ### 1. Finish the Shift
 
@@ -83,6 +83,20 @@ For example:
 
 This creates a continuous cycle in which each shift informs the next.
 
+### 5. Explore connected modules
+
+The browser prototype also includes demo interactions for:
+
+- a demo-only manager sign-in path and supervisor dashboard
+- Skill Passport overview and evidence history across sample shifts
+- role-based hospitality skill frameworks and next-shift practice tasks
+- short learning resources with local completion states
+- supervisor observations and a demo skill-verification action
+- a sample team-readiness dashboard
+- a system-connections screen for learning platforms, POS, and workforce directories
+
+These modules use fictional records stored in the current browser. Supervisor, team, and integration screens are product demonstrations; no employee system, POS, LMS, or backend is connected.
+
 ## Why ALT Is Different
 
 Traditional training systems often focus on whether an employee has:
@@ -121,7 +135,7 @@ Employees can demonstrate progress while supervisors retain responsibility for f
 
 ## Future Development
 
-Possible future features include:
+Production development still requires:
 
 - supervisor verification workflows
 - multi-shift evidence history
@@ -131,6 +145,7 @@ Possible future features include:
 - manager observations as an additional evidence source
 - adaptive onboarding plans
 - integration with workplace training systems
+- secure accounts, role permissions, audit history, and employer-specific skill standards
 
 ## Hackathon Prototype
 
