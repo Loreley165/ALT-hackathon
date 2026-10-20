@@ -1,13 +1,14 @@
-import {createHmac,randomUUID,timingSafeEqual} from 'node:crypto';
-import {rounds,assessOrder,GAME_VERSION,normalizeNickname} from '../experience-model.js';
+import {createHmac,randomUUID,timingSafeEqual,randomInt} from 'node:crypto';
+import {rounds,assessOrder,GAME_VERSION,normalizeNickname,drawQuestionIds,questionsForIds} from '../experience-model.js';
 export function createLeaderboard(store,secret){
  const sign=s=>createHmac('sha256',secret).update(s).digest('base64url');
  return async function handle(method,body={},query={}){
   const mode=body.mode||query.mode||'rush';
   if(!['rush','service'].includes(mode))return {status:400,error:'Unknown difficulty.'};
   if(method==='POST'&&body.action==='start'){
-   const payload=Buffer.from(JSON.stringify({id:randomUUID(),at:Date.now(),mode,version:GAME_VERSION})).toString('base64url');
-   return {token:payload+'.'+sign(payload)};
+   const questionIds=drawQuestionIds(()=>randomInt(1000000)/1000000);
+   const payload=Buffer.from(JSON.stringify({id:randomUUID(),at:Date.now(),mode,version:GAME_VERSION,questionIds})).toString('base64url');
+   return {token:payload+'.'+sign(payload),questionIds};
   }
   let mine=null;
   if(method==='POST'){
@@ -18,8 +19,9 @@ export function createLeaderboard(store,secret){
    const elapsed=Date.now()-session.at;
    if(session.version!==GAME_VERSION||session.mode!==mode||elapsed<15000||elapsed>1800000)return {status:400,error:'This shift has expired. Please play again.'};
    if(!Array.isArray(body.answers)||body.answers.length!==rounds.length||body.answers.some(a=>!Array.isArray(a)||a.length>20))return {status:400,error:'Incomplete shift.'};
+   let assigned;try{assigned=questionsForIds(session.questionIds);}catch{return {status:400,error:'Please start a new shift.'};}
    const name=normalizeNickname(body.name);
-   mine={id:session.id,name,score:rounds.reduce((n,r,i)=>n+assessOrder(body.answers[i],r).score,0),total:15,ms:elapsed,mode};
+   mine={id:session.id,name,score:assigned.reduce((n,r,i)=>n+assessOrder(body.answers[i],r).score,0),total:15,ms:elapsed,mode};
    await store.add(mode,mine);
   }else if(method!=='GET')return {status:405,error:'Method not allowed.'};
   const entries=await store.list(mode);
