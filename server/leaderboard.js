@@ -33,6 +33,8 @@ export function createLeaderboard(store,secret){
 }
 export function redisStore(url,token){
  const command=async args=>{const r=await fetch(url,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify(args),signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error('Database unavailable');const d=await r.json();if(d.error)throw Error('Database unavailable');return d.result;};
- const key=mode=>`alt:${GAME_VERSION}:${mode}`;
- return {async add(mode,row){await command(['HSETNX',key(mode),row.id,JSON.stringify(row)]);},async list(mode){return (await command(['HVALS',key(mode)])||[]).map(x=>JSON.parse(x));}};
+ const key=mode=>`alt:showcase-15:${mode}`;
+ // Copy compatible historical scores without replacing or deleting any records.
+ const mergeScript=`for i=2,#KEYS do local rows=redis.call('HGETALL',KEYS[i]); for j=1,#rows,2 do redis.call('HSETNX',KEYS[1],rows[j],rows[j+1]); end; end; return redis.call('HVALS',KEYS[1]);`;
+ return {async add(mode,row){await command(['HSETNX',key(mode),row.id,JSON.stringify(row)]);},async list(mode){return (await command(['EVAL',mergeScript,3,key(mode),`alt:rush-v2:${mode}`,`alt:rush-v3:${mode}`])||[]).map(x=>JSON.parse(x));}};
 }
