@@ -1,5 +1,5 @@
 import {createHmac,randomUUID,timingSafeEqual} from 'node:crypto';
-import {rounds,assessOrder,GAME_VERSION} from '../experience-model.js';
+import {rounds,assessOrder,GAME_VERSION,normalizeNickname} from '../experience-model.js';
 export function createLeaderboard(store,secret){
  const sign=s=>createHmac('sha256',secret).update(s).digest('base64url');
  return async function handle(method,body={},query={}){
@@ -18,7 +18,7 @@ export function createLeaderboard(store,secret){
    const elapsed=Date.now()-session.at;
    if(session.version!==GAME_VERSION||session.mode!==mode||elapsed<15000||elapsed>1800000)return {status:400,error:'This shift has expired. Please play again.'};
    if(!Array.isArray(body.answers)||body.answers.length!==rounds.length||body.answers.some(a=>!Array.isArray(a)||a.length>20))return {status:400,error:'Incomplete shift.'};
-   const name=String(body.name||'Anonymous').normalize('NFKC').replace(/[<>\p{Cc}\p{Cf}]/gu,'').trim().slice(0,24)||'Anonymous';
+   const name=normalizeNickname(body.name);
    mine={id:session.id,name,score:rounds.reduce((n,r,i)=>n+assessOrder(body.answers[i],r).score,0),total:15,ms:elapsed,mode};
    await store.add(mode,mine);
   }else if(method!=='GET')return {status:405,error:'Method not allowed.'};

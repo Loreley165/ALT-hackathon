@@ -55,3 +55,5 @@ body[data-experience-stage=complete] .experience-product-header{display:none}.fe
 .challenge-promo{background:linear-gradient(125deg,#efe9dd 0%,#f4eee4 55%,#e9ecdf 100%);border:1px solid #e2ddcf;border-radius:34px;padding:56px;position:relative;margin:80px auto}.challenge-promo>div{min-width:0}.challenge-promo .challenge-art{background:transparent}.challenge-promo .section-lead{font-size:16px}.challenge-promo h2{font-size:clamp(35px,4vw,54px)}@media(max-width:700px){.challenge-promo{padding:30px 24px;margin:55px auto;border-radius:26px}.challenge-promo h2{font-size:36px}.challenge-promo .challenge-art{min-height:280px}.challenge-promo .receipt{max-width:100%}}
 
 .replacement-cost{display:block;font-size:30px;letter-spacing:-.035em;color:#e5b394;line-height:1.25;margin-bottom:10px}.evidence-cost-source{display:block;font-size:10px;line-height:1.7;color:#c0c9c7;text-decoration:underline;text-underline-offset:3px;margin-top:12px}
+
+.leaderboard-list li.leaderboard-empty{display:block;padding:18px 10px;color:var(--muted);line-height:1.7}

@@ -29,3 +29,5 @@ export function assessSession(results){
  return {score,total,details,rounds:results,reflection,mission,focus,requestCorrect:!requestMiss,perfect};
 }
 export function phraseAt(elapsed,currentOrder,speed=1){let boundary=0;for(let i=0;i<currentOrder.phrases.length;i++){boundary+=currentOrder.phrases[i].ms*speed;if(elapsed<boundary)return i;}return -1;}
+
+export function normalizeNickname(value){return String(value||'').normalize('NFKC').replace(/[<>\p{Cc}\p{Cf}]/gu,'').trim().slice(0,24)||'Guest';}
