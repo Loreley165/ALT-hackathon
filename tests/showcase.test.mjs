@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {assessOrder} from '../experience-model.js';
+test('all correct creates a next challenge without claiming certification',()=>{const r=assessOrder(['beef','onion','water','takeaway']);assert.equal(r.score,4);assert.match(r.mission,/two-person/);assert.match(r.reflection,/simulated/);});
+test('missed special request carries into reflection and targeted practice',()=>{const r=assessOrder(['beef','cheese','water','takeaway']);assert.equal(r.score,3);assert.match(r.reflection,/special requests/);assert.match(r.mission,/special request/);});
+test('empty and select-all cannot earn a perfect result',()=>{assert.equal(assessOrder([]).score,0);assert.equal(assessOrder(['beef','chicken','onion','cheese','water','cola']).score,0);});
+test('duplicate selections do not inflate result and unknown values are ignored',()=>{assert.equal(assessOrder(['beef','beef','onion','water','takeaway','unknown']).score,4);});
+import {rounds,assessSession} from '../experience-model.js';
+test('three perfect rounds produce fifteen details and a multi-round reflection',()=>{const session=assessSession(rounds.map(r=>assessOrder(r.correct,r)));assert.equal(session.score,15);assert.equal(session.total,15);assert.equal(session.perfect,true);assert.match(session.reflection,/3 simulated/);assert.match(session.mission,/two-person/);});
+test('revised coffee order rewards the final size and temperature',()=>{assert.equal(assessOrder(['large','oat','hot'],rounds[1]).score,1);assert.equal(assessOrder(['small','oat','iced','decaf','one'],rounds[1]).score,5);});
+test('last-round missed request is retained even if the first request was correct',()=>{const results=rounds.map(r=>assessOrder(r.correct,r));results[2]=assessOrder(['wrap','chips','onion','sparkling','chicken','side'],rounds[2]);const session=assessSession(results);assert.equal(session.score,14);assert.equal(session.requestCorrect,false);assert.match(session.mission,/special request/);});
+test('all rounds empty still produce a complete session and a useful next task',()=>{const session=assessSession(rounds.map(r=>assessOrder([],r)));assert.equal(session.score,0);assert.equal(session.total,15);assert.equal(session.rounds.length,3);assert.ok(session.mission);});
+import {phraseAt} from '../experience-model.js';
+test('spoken phrase boundaries advance and finish at both speeds',()=>{for(const speed of [.8,1.2]){let elapsed=0;rounds[0].phrases.forEach((p,i)=>{assert.equal(phraseAt(elapsed,rounds[0],speed),i);elapsed+=p.ms*speed;});assert.equal(phraseAt(elapsed,rounds[0],speed),-1);}});

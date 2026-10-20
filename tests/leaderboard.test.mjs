@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createHmac} from 'node:crypto';
+import {createLeaderboard} from '../server/leaderboard.js';
+import {rounds,GAME_VERSION} from '../experience-model.js';
+function setup(){const rows=new Map();const store={async add(mode,row){if(!rows.has(row.id))rows.set(row.id,row);},async list(mode){return [...rows.values()].filter(r=>r.mode===mode);}};const secret='test-secret';const token=(id,mode='rush',at=Date.now()-60000)=>{const p=Buffer.from(JSON.stringify({id,at,mode,version:GAME_VERSION})).toString('base64url');return p+'.'+createHmac('sha256',secret).update(p).digest('base64url');};return {handle:createLeaderboard(store,secret),token};}
+test('shared storage, server scoring, duplicate protection and difficulty separation',async()=>{const {handle,token}=setup();const body={name:'Player A',mode:'rush',token:token('one'),answers:rounds.map(r=>r.correct),score:999};const first=await handle('POST',body);assert.equal(first.mine.score,15);assert.equal(first.mine.rank,1);await handle('POST',body);assert.equal((await handle('GET',{},{})).total,1);assert.equal((await handle('GET',{}, {mode:'service'})).total,0);});
+test('reject tampering, expired sessions and incomplete answers',async()=>{const {handle,token}=setup();assert.equal((await handle('POST',{token:'fake',answers:[]})).status,400);assert.equal((await handle('POST',{token:token('old','rush',0),answers:rounds.map(r=>r.correct)})).status,400);assert.equal((await handle('POST',{token:token('short'),answers:[]})).status,400);});
+test('score first then elapsed time, and sanitize public nickname',async()=>{const {handle,token}=setup();await handle('POST',{token:token('slow','rush',Date.now()-90000),answers:rounds.map(r=>r.correct),name:'Slow'});const data=await handle('POST',{token:token('fast'),answers:rounds.map(r=>r.correct),name:'<Fast>\n'});assert.equal(data.mine.rank,1);assert.equal(data.entries[0].name,'Fast');});
